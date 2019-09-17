@@ -1,0 +1,15 @@
+@import "../base/colors";
+@import "../base/fonts";
+
+$background: $yellow;
+$primary: $red;
+$secondary: $green;
+$link: $blue;
+$success: lighten($green, 10%);
+$warning: darken($yellow, 20%);
+$danger: darken($red, 5%);
+$dark: darken($black, 10%);
+$text: $black;
+
+$family-primary: $family-raleway;
+$family-secondary: $family-roboto;

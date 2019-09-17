@@ -1,0 +1,58 @@
+@charset "utf-8";
+@import "./vendor/bulma.config";
+@import "./vendor/bulma";
+@import "./base/colors";
+@import "./base/fonts";
+
+* {
+  box-sizing: border-box;
+  line-height: 1.2;
+}
+
+/* button,
+input,
+select,
+textarea {
+  font-family: $family-secondary;
+} */
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+}
+
+body {
+  background: $background;
+  color: $text;
+  font-family: $family-primary;
+  font-size: 1em;
+}
+
+a {
+  text-decoration: underline;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: $family-secondary;
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 1.5em;
+  line-height: 2;
+}
+
+p {
+  margin-bottom: 1em;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

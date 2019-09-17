@@ -1,0 +1,20 @@
+@import "../../assets/styles/base/colors";
+
+.site-header {
+  background: $black;
+  color: $white;
+
+  a,
+  a:visited {
+    color: $white;
+    text-decoration: none;
+  }
+
+  h1 {
+    display: inline-block;
+  }
+
+  .navbar.is-transparent {
+    background: transparent;
+  }
+}
