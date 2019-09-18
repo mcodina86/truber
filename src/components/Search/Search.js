@@ -1,9 +1,29 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Input, Control, Field, Button } from "../Form/index";
+import axios from "axios";
 
-const Search = () => {
+const Search = props => {
+  const txt = useRef(null);
+  const [taxis, setTaxis] = useState([]);
+
   const doSubmit = () => {
-    alert("Se ha apretado!");
+    const val = txt.current.value;
+    let url = "//gobiernoabierto.cordoba.gob.ar/api/v2/transporte-publico/taxis/";
+    if (val) url += `?q=${val}`;
+    axios
+      .get(url)
+      .then(response => {
+        const { data } = response;
+        const list = data.results.map(taxi => {
+          return {
+            titular: taxi.titular,
+            patente: taxi.patente
+          };
+        });
+
+        setTaxis(list);
+      })
+      .catch(error => console.error(error));
   };
 
   return (
@@ -11,7 +31,7 @@ const Search = () => {
       <div className="container">
         <Field addons={true}>
           <Control expanded={true}>
-            <Input size="l" inputType="text">
+            <Input size="l" inputType="text" ref={txt}>
               Chapa, conductor, auto...
             </Input>
           </Control>
@@ -21,6 +41,16 @@ const Search = () => {
             </Button>
           </Control>
         </Field>
+      </div>
+
+      <div className="container">
+        {taxis.length > 0 ? (
+          <ul>
+            {taxis.map(taxi => (
+              <li key={taxi.patente}>{taxi.titular}</li>
+            ))}
+          </ul>
+        ) : null}
       </div>
     </div>
   );
