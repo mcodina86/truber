@@ -1,10 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Input, Control, Field, Button } from "../Form/index";
+import SearchTable from "./SearchTable";
 import axios from "axios";
 
 const Search = props => {
   const txt = useRef(null);
-  const [taxis, setTaxis] = useState([]);
+  const [taxis, setTaxis] = useState(false);
+  const [totalSearch, setTotalSearch] = useState(0);
+  const [pageSize, setPageSize] = useState(50);
+
+  useEffect(() => {
+    txt.current.addEventListener("keyup", function(ev) {
+      if (ev.key === "Enter") {
+        doSubmit();
+      }
+      return;
+    });
+  }, []);
 
   const doSubmit = () => {
     const val = txt.current.value;
@@ -14,13 +26,17 @@ const Search = props => {
       .get(url)
       .then(response => {
         const { data } = response;
+        setTotalSearch(data.count);
+        if (data.total > data.results.length) setPageSize(data.results.length);
         const list = data.results.map(taxi => {
+          const { titular, patente, marca, modelo_vehiculo, anio_fabricacion, estado, CUIT } = taxi;
+
           return {
-            titular: taxi.titular,
-            patente: taxi.patente
+            titular: { nombre: titular, CUIT },
+            auto: { marca, patente, modelo: modelo_vehiculo, anio: anio_fabricacion },
+            estado
           };
         });
-
         setTaxis(list);
       })
       .catch(error => console.error(error));
@@ -31,7 +47,7 @@ const Search = props => {
       <div className="container">
         <Field addons={true}>
           <Control expanded={true}>
-            <Input size="l" inputType="text" ref={txt}>
+            <Input size="l" ref={txt}>
               Chapa, conductor, auto...
             </Input>
           </Control>
@@ -43,13 +59,12 @@ const Search = props => {
         </Field>
       </div>
 
-      <div className="container">
-        {taxis.length > 0 ? (
-          <ul>
-            {taxis.map(taxi => (
-              <li key={taxi.patente}>{taxi.titular}</li>
-            ))}
-          </ul>
+      <div className="container search-results">
+        {taxis ? (
+          <div>
+            <p>{totalSearch === 0 ? "Sin resultados." : `Total: ${totalSearch}. Mostrando: ${pageSize > totalSearch ? totalSearch : pageSize}`}</p>
+            {totalSearch > 0 ? <SearchTable data={taxis}></SearchTable> : null}
+          </div>
         ) : null}
       </div>
     </div>
